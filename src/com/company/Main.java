@@ -6,10 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.util.Base64;
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
+import javax.crypto.*;
 
 public class Main {
 
@@ -26,17 +23,17 @@ public class Main {
 //    }
 
     public static final String AES = "AES";
-    public static void main(String[] args) throws NoSuchAlgorithmException, IllegalArgumentException, UnsupportedEncodingException, NoSuchPaddingException {
+    public static void main(String[] args) throws NoSuchAlgorithmException, IllegalArgumentException, UnsupportedEncodingException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
-//        KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-//        kpg.initialize(2048);      //key size
-//
-//        KeyPair kp = kpg.generateKeyPair();
-//        Key pub = kp.getPublic();
-//        Key pri = kp.getPrivate();
-//
-//        System.out.println("Public RSA Key: " + pub + "\n");
-//        System.out.printf("Private RSA Key: " + pri + "\n");
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+        kpg.initialize(2048);      //key size
+
+        KeyPair kp = kpg.generateKeyPair();
+        Key pub = kp.getPublic();
+        Key pri = kp.getPrivate();
+
+        System.out.println("Public RSA Key: " + pub + "\n");
+        System.out.printf("Private RSA Key: " + pri + "\n");
             // 1st QUESTION //
 
         SecureRandom secureRandom = new SecureRandom();
@@ -68,5 +65,26 @@ public class Main {
         System.out.println("Symmetric key Hexadecimal (256-bit): " + binary2 + "\n");
 
         Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.ENCRYPT_MODE,pub);
+
+        byte[] encrypted1 = cipher.doFinal(symKey1Temp.getBytes());
+        byte[] encrypted2 = cipher.doFinal(symKey2Temp.getBytes());
+        String encryptedKey1 = new String(Base64.getEncoder().encode(encrypted1));
+        String encryptedKey2 = new String(Base64.getEncoder().encode(encrypted2));
+
+        System.out.println(encryptedKey1 + "\n");
+        System.out.println(encryptedKey2 + "\n");
+
+        Cipher cipherDecrypt = Cipher.getInstance("RSA");
+        cipherDecrypt.init(Cipher.DECRYPT_MODE,pri);
+
+        byte[] decrypted1 = cipherDecrypt.doFinal(encrypted1);
+        byte[] decrypted2 = cipherDecrypt.doFinal(encrypted2);
+
+        System.out.println(decrypted1 + "\n");
+        System.out.println(decrypted2);
+
+        //byte[] decryptedKey1 = cipherDecrypt.doFinal()
+
     }
 }
