@@ -82,9 +82,7 @@ public class Main {
         byte[] decrypted2 = cipherDecrypt.doFinal(encrypted2);
 
         System.out.println(decrypted1 + "\n");
-        System.out.println(decrypted2);
-
-        //byte[] decryptedKey1 = cipherDecrypt.doFinal()
-
+        System.out.println(decrypted2 + "\n");
+                // 2nd QUESTION //
     }
 }
